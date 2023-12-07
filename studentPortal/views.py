@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import IntegrityError
 from .models import *
-# Create your views here.
+#todo
 
 def index(request):
     return render(request, "studentPortal/index.html")
@@ -27,7 +27,7 @@ def login_view(request):
                 "message": "Invalid username and/or password."
             })
     else:
-        return render(request, "network/login.html")
+        return render(request, "studentPortal/login.html")
 
 
 def logout_view(request):
@@ -56,6 +56,18 @@ def register(request):
             return render(request, "studentPortal/register.html", {
                 "message": "Username already taken."
             })
+        
+        #attempt to create student if student was chosen
+        if request.POST['userType'] == 'Student':
+            firstName = request.POST["firstname"]
+            lastName = request.POST["lastname"]
+            standing = request.POST["standing"]
+            
+            student = Student.objects.create(student=user,studentFirstName=firstName,studentLastName=lastName,studentEmail=email,standing=standing)
+            student.save
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+            
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
