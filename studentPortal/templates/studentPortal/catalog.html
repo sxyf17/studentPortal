@@ -1,0 +1,26 @@
+{% extends "studentPortal/layout.html" %}
+
+{% block body %}
+{{message}}
+{% for class in classData %}
+
+    <div class="catalog">
+        <p>{{class.classObj}}</p>
+        <p>{{class.classObj.classTimings}}</p>
+        <p>Limit: {{class.classObj.studentLimit}}</p>
+        <p>Current size: {{class.currentStudentCount}}</p>
+        <p>enrolled = {{class.enrolled}}</p>
+        {% if not class.enrolled %}
+            <form action="{% url 'enroll' class.classObj.id user.id %}" method="post">
+                {%csrf_token%}
+                <input class="btn btn-primary" type="submit" value="Enroll" style="position: absolute; right: 10px; top: 15px;">
+            </form>
+        {% else %}
+            <form action="{% url 'unenroll' class.classObj.id user.id %}" method="post">
+                {%csrf_token%}
+                <input class="btn btn-danger" type="submit" value="Unenroll" style="position: absolute; right: 10px; top: 15px;">
+            </form>
+        {% endif %}
+    </div>
+{% endfor %}
+{% endblock %}

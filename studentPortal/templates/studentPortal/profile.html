@@ -1,0 +1,20 @@
+{% extends "studentPortal/layout.html" %}
+
+{% block body %}
+
+hello {{user.username}}
+<br>
+Schedule:
+<div>
+    {% for class in classData %}
+        <div class="catalog">
+            <p>{{class.classObj}}</p>
+            <p>{{class.classObj.classTimings}}</p>
+            <p>Limit: {{class.classObj.studentLimit}}</p>
+            <p>Current size: {{class.currentStudentCount}}</p>
+        </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %} 

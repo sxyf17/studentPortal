@@ -12,6 +12,7 @@ class Student(models.Model):
     studentLastName = models.CharField(max_length=200,default=None)
     studentEmail = models.CharField(max_length=200)
     standing = models.CharField(max_length=8)
+    classes = models.ManyToManyField('Class', related_name="classes", blank=True)
     
     def __str__(self):
         return f"{self.pk}: {self.studentFirstName}"
@@ -19,12 +20,13 @@ class Student(models.Model):
 
 class Class(models.Model):
     className = models.CharField(max_length=100)
+    classNumber = models.CharField(max_length=8, default=None)
     classTimings = models.CharField(max_length=100)
     studentLimit = models.PositiveIntegerField()
     studentList = models.ManyToManyField(Student, related_name='students', blank=True)
     
     def __str__(self):
-        return f"{self.className}"
+        return f"{self.classNumber} - {self.className}"
 
 
 
