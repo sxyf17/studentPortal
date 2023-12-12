@@ -10,10 +10,16 @@
         <p>Limit: {{class.classObj.studentLimit}}</p>
         <p>Current size: {{class.currentStudentCount}}</p>
         <p>enrolled = {{class.enrolled}}</p>
-        {% if not class.enrolled %}
+        <p>{{class.waitlistCount}} students on waitlist</p>
+        {% if not class.enrolled and class.currentStudentCount < class.classObj.studentLimit %}
             <form action="{% url 'enroll' class.classObj.id user.id %}" method="post">
                 {%csrf_token%}
                 <input class="btn btn-primary" type="submit" value="Enroll" style="position: absolute; right: 10px; top: 15px;">
+            </form>
+        {% elif not class.enrolled and class.currentStudentCount == class.classObj.studentLimit %}
+            <form action="{% url 'waitlist' class.classObj.id user.id %}" method="post">
+                {%csrf_token%}
+                <input class="btn btn-secondary" type="submit" value="Waitlist" style="position: absolute; right: 10px; top: 15px;">
             </form>
         {% else %}
             <form action="{% url 'unenroll' class.classObj.id user.id %}" method="post">

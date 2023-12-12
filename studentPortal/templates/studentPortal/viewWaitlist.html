@@ -1,0 +1,17 @@
+{% extends "studentPortal/layout.html" %}
+
+{% block body %}
+
+{% if waitlist %}
+
+    {% for course in waitlist %}
+        {{course}}
+    {% endfor %}
+
+{% else %}
+
+    No classes on waitlist
+
+{% endif %}
+
+{% endblock %}

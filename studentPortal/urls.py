@@ -10,5 +10,7 @@ urlpatterns = [
     path("catalog/<int:userID>/", views.catalog, name="catalog"),
     path("enroll/<int:classID>/<int:userID>", views.enroll, name="enroll"),
     path("unenroll/<int:classID>/<int:userID>", views.unenroll, name="unenroll"),
+    path("waitlist/<int:classID>/<int:userID>", views.waitlist, name="waitlist"),
+    path("viewWaitlist/<int:userID>", views.viewWaitlist, name="viewWaitlist")
 
 ]
