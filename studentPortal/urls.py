@@ -11,6 +11,8 @@ urlpatterns = [
     path("enroll/<int:classID>/<int:userID>", views.enroll, name="enroll"),
     path("unenroll/<int:classID>/<int:userID>", views.unenroll, name="unenroll"),
     path("waitlist/<int:classID>/<int:userID>", views.waitlist, name="waitlist"),
-    path("viewWaitlist/<int:userID>", views.viewWaitlist, name="viewWaitlist")
+    path("viewWaitlist/<int:userID>", views.viewWaitlist, name="viewWaitlist"),
+    path("createClass/<int:userID>", views.createClass, name="createClass"),
+    path("createPage", views.createPage, name="createPage")
 
 ]

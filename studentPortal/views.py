@@ -7,28 +7,71 @@ from .models import *
 #todo waitlist
 
 def catalog(request, userID):
-    classes = Class.objects.all()
+    
     user = User.objects.get(pk=userID)
-    student = Student.objects.get(student=user)
+    student = Student.objects.filter(student=user).first()
     
+    classes = Class.objects.all()
     classData = []
-    for classObj in classes:
-        enrolled = False
-        currentStudentCount = classObj.studentList.count()
-        waitlistCount = classObj.studentWaitlist.count()
-        if student in classObj.studentList.all():
-            enrolled = True
+
+    if student:
+        # If the user is a student
+        for classObj in classes:
+            enrolled = student in classObj.studentList.all()
+            currentStudentCount = classObj.studentList.count()
+            waitlistCount = classObj.studentWaitlist.count()
+
+            classData.append({
+                "classObj": classObj,
+                "currentStudentCount": currentStudentCount,
+                "enrolled": enrolled,
+                "waitlistCount": waitlistCount
+            })
+    else:
+        # If the user is not a student (instructor)
+        for classObj in classes:
+            currentStudentCount = classObj.studentList.count()
+            waitlistCount = classObj.studentWaitlist.count()
+
+            classData.append({
+                "classObj": classObj,
+                "currentStudentCount": currentStudentCount,
+                "waitlistCount": waitlistCount
+            })
         
-        classData.append({
-            "classObj": classObj,
-            "currentStudentCount": currentStudentCount,
-            "enrolled": enrolled,
-            "waitlistCount": waitlistCount
-        })
-    
+        return render(request, "studentPortal/instrCatalog.html", {
+        "classData": classData,
+    })
+
     return render(request, "studentPortal/catalog.html", {
         "classData": classData,
     })
+
+
+def createClass(request, userID):
+    
+    user = User.objects.get(pk=userID)
+    
+    if request.method == 'POST':
+        # Process the form submission to create a new class
+        className = request.POST.get('className')
+        classNumber = request.POST.get('classNumber')
+        classTimings = request.POST.get('classTimings')
+        studentLimit = request.POST.get('studentLimit')
+        
+        # Create a new class
+        newClass = Class.objects.create(className=className,classNumber=classNumber,classTimings=classTimings,studentLimit=studentLimit)
+        # Add the instructor to the class
+        instructor = Instructor.objects.get(instructor=user)
+        newClass.instructorClasses.add(instructor)
+
+        # Save the new class
+        newClass.save()
+        return HttpResponse("Class successfully added")
+
+
+def createPage(request):
+    return render(request, "studentPortal/createPage.html")
 
 
 def enroll(request, classID, userID):
@@ -118,7 +161,9 @@ def login_view(request):
 
             if is_instructor:
                 # Render a template for instructors
-                return HttpResponse("instructor")
+                return render(request, "studentPortal/instructor.html", {
+                        
+                })
             
             return redirect("profile", user.id)
         else:
